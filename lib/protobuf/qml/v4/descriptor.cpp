@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QQmlInfo>
 #include <QThreadPool>
+
 #include <private/qv4arraybuffer_p.h>
 #include <private/qv4string_p.h>
 #include <private/qv4typedarray_p.h>
@@ -18,6 +19,8 @@ namespace protobuf {
 namespace qml {
 
 typedef int32_t OneofIndex;
+
+#ifndef PROTOBUF_QML_DISABLE_SERIALIZE
 
 void Descriptor::serialize(QQmlV4Function* args) {
   if (!descriptor_) {
@@ -56,6 +59,8 @@ void Descriptor::serialize(QQmlV4Function* args) {
   }
 }
 
+#endif
+
 Message* Descriptor::parseToNewMessage(const char* data, int size) {
   auto msg = message_factory_.GetPrototype(descriptor_)->New();
   if (!msg->ParseFromArray(data, size)) {
@@ -64,6 +69,8 @@ Message* Descriptor::parseToNewMessage(const char* data, int size) {
   }
   return msg;
 }
+
+#ifndef PROTOBUF_QML_DISABLE_SERIALIZE
 
 void Descriptor::parse(QQmlV4Function* args) {
   if (!descriptor_) {
@@ -122,6 +129,8 @@ void Descriptor::parse(QQmlV4Function* args) {
     }
   }
 }
+
+#endif
 
 std::unique_ptr<Message> Descriptor::jsValueToMessage(ExecutionEngine* v4,
                                                       ArrayObject& value) {
@@ -708,6 +717,8 @@ void Descriptor::setRepeatedFieldValue(ExecutionEngine* v4,
   }
 }
 
+#ifndef PROTOBUF_QML_DISABLE_SERIALIZE
+
 SerializeTask::SerializeTask(std::unique_ptr<Message> msg,
                              QV4::ExecutionEngine* v4,
                              const QV4::Value& callback)
@@ -780,5 +791,8 @@ void ParseTask::onDone() {
 
   delete this;
 }
+
+#endif
+
 }
 }

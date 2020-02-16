@@ -25,9 +25,13 @@ public:
                       QObject* p = nullptr)
       : QObject(p), descriptor_(descriptor) {}
 
+#ifndef PROTOBUF_QML_DISABLE_SERIALIZE
+
   Q_INVOKABLE void serialize(QQmlV4Function*);
 
   Q_INVOKABLE void parse(QQmlV4Function*);
+
+#endif
 
   std::unique_ptr<google::protobuf::Message> jsValueToMessage(
       QV4::ExecutionEngine*, QV4::ArrayObject&);
@@ -82,6 +86,8 @@ private:
   std::unique_ptr<google::protobuf::Message> default_message_;
 };
 
+#ifndef PROTOBUF_QML_DISABLE_SERIALIZE
+
 class SerializeTask : public QObject, public QRunnable {
   Q_OBJECT
 
@@ -129,6 +135,9 @@ private:
   QV4::ExecutionEngine* v4_;
   QV4::PersistentValue callback_;
 };
+
+#endif
+
 }
 }
 

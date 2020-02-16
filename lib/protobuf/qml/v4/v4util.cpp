@@ -1,6 +1,8 @@
 #include "protobuf/qml/v4/v4util.h"
 
+#ifndef PROTOBUF_QML_DISABLE_SERIALIZE
 #include <private/qqmlcontextwrapper_p.h>
+#endif
 
 using namespace QV4;
 
@@ -23,6 +25,8 @@ QQmlContextData* callingQmlContext(ExecutionEngine* v4) {
   return v4->v8Engine->callingContext();
 #endif
 }
+
+#ifndef PROTOBUF_QML_DISABLE_SERIALIZE
 
 ReturnedValue packCallbackObject(ExecutionEngine* v4, const Value& callback) {
   Scope scope(v4);
@@ -67,5 +71,8 @@ std::pair<ReturnedValue, ReturnedValue> unpackCallbackObject(
   return std::make_pair(ctx.asReturnedValue(), cb.asReturnedValue());
 #undef UNPACK_EMPTY_RESULT
 }
+
+#endif
+
 }
 }
